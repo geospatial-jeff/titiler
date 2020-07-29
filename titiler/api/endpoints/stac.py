@@ -22,7 +22,7 @@ from titiler.errors import BadRequestError
 from titiler.models.cog import cogBounds, cogInfo, cogMetadata
 from titiler.models.mapbox import TileJSON
 from titiler.ressources.enums import ImageMimeTypes, ImageType
-from titiler.ressources.responses import ImgResponse
+from titiler.ressources.responses import ImgResponse, JSONResponse
 from titiler.templates.factory import web_template
 
 from fastapi import APIRouter, Depends, Path, Query
@@ -448,6 +448,9 @@ async def stac_tilejson(
         if minzoom:
             center[-1] = minzoom
         tjson = {
+            "tilejson": "2.2.0",
+            "version": "1.0.0",
+            "scheme": "xyz",
             "bounds": stac.bounds,
             "center": tuple(center),
             "minzoom": minzoom or stac.minzoom,
@@ -456,8 +459,7 @@ async def stac_tilejson(
             "tiles": [tile_url],
         }
 
-    response.headers["Cache-Control"] = "max-age=3600"
-    return tjson
+    return JSONResponse(tjson)
 
 
 @router.get("/viewer", response_class=HTMLResponse, tags=["Webpage"])
