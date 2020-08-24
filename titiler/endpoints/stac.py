@@ -40,7 +40,7 @@ templates = Jinja2Templates(directory="titiler/templates")
     response_model=cogBounds,
     responses={200: {"description": "Return the bounds of the STAC item."}},
 )
-async def stac_bounds(url: str = Query(..., description="STAC item URL.")):
+def stac_bounds(url: str = Query(..., description="STAC item URL.")):
     """Return the bounds of the STAC item."""
     with STACReader(url) as stac:
         return {"bounds": stac.bounds}
@@ -53,7 +53,7 @@ async def stac_bounds(url: str = Query(..., description="STAC item URL.")):
     response_model_exclude_none=True,
     responses={200: {"description": "Return basic info for STAC item's assets"}},
 )
-async def stac_info(
+def stac_info(
     url: str = Query(..., description="STAC item URL."),
     assets: str = Query(None, description="comma (,) separated list of asset names."),
 ):
@@ -74,7 +74,7 @@ async def stac_info(
     response_model_exclude_none=True,
     responses={200: {"description": "Return the metadata for STAC item's assets."}},
 )
-async def stac_metadata(
+def stac_metadata(
     request: Request,
     url: str = Query(..., description="STAC item URL."),
     assets: str = Query(..., description="comma (,) separated list of asset names."),
@@ -106,7 +106,7 @@ async def stac_metadata(
 @router.get(
     r"/tiles/{TileMatrixSetId}/{z}/{x}/{y}@{scale}x.{format}", **img_endpoint_params
 )
-async def stac_tile(
+def stac_tile(
     z: int = Path(..., ge=0, le=30, description="Mercator tiles's zoom level"),
     x: int = Path(..., description="Mercator tiles's column"),
     y: int = Path(..., description="Mercator tiles's row"),
@@ -195,7 +195,7 @@ async def stac_tile(
 
 @router.get(r"/preview", **img_endpoint_params)
 @router.get(r"/preview.{format}", **img_endpoint_params)
-async def stac_preview(
+def stac_preview(
     format: ImageType = Query(None, description="Output image type. Default is auto."),
     url: str = Query(..., description="STAC Item URL."),
     assets: str = Query("", description="comma (,) separated list of asset names."),
@@ -247,7 +247,7 @@ async def stac_preview(
 
 # @router.get(r"/crop/{minx},{miny},{maxx},{maxy}", **img_endpoint_params)
 @router.get(r"/crop/{minx},{miny},{maxx},{maxy}.{format}", **img_endpoint_params)
-async def stac_part(
+def stac_part(
     minx: float = Path(..., description="Bounding box min X"),
     miny: float = Path(..., description="Bounding box min Y"),
     maxx: float = Path(..., description="Bounding box max X"),
@@ -303,7 +303,7 @@ async def stac_part(
     r"/point/{lon},{lat}",
     responses={200: {"description": "Return a value for a point"}},
 )
-async def cog_point(
+def cog_point(
     lon: float = Path(..., description="Longitude"),
     lat: float = Path(..., description="Latitude"),
     url: str = Query(..., description="Cloud Optimized GeoTIFF URL."),
@@ -361,7 +361,7 @@ async def cog_point(
     responses={200: {"description": "Return a tilejson"}},
     response_model_exclude_none=True,
 )
-async def stac_tilejson(
+def stac_tilejson(
     request: Request,
     TileMatrixSetId: TileMatrixSetNames = Query(
         TileMatrixSetNames.WebMercatorQuad,  # type: ignore
