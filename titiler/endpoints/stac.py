@@ -31,8 +31,10 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette.templating import Jinja2Templates
 
+TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "..", "templates")
+
 router = APIRouter()
-templates = Jinja2Templates(directory="titiler/templates")
+templates = Jinja2Templates(directory=TEMPLATE_DIR)
 
 
 @router.get(
