@@ -1,5 +1,7 @@
 """Titiler demo pages."""
 
+import os
+
 from fastapi import APIRouter
 
 from starlette.requests import Request
@@ -8,8 +10,8 @@ from starlette.templating import Jinja2Templates
 
 router = APIRouter()
 
-
-templates = Jinja2Templates(directory="titiler/templates")
+TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "..", "templates")
+templates = Jinja2Templates(directory=TEMPLATE_DIR)
 
 
 @router.get("/cog/viewer", response_class=HTMLResponse, tags=["Demo"])
